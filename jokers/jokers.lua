@@ -22,7 +22,6 @@ SMODS.Joker{
     calculate = function(self, card, context)                   --define calculate functions here
         if card.debuff then return nil end               --if joker is debuffed return nil
         if context.joker_main and context.cardarea == G.jokers then
-			logger.log(hand_chips)
             return { -- returns total chips from joker to be used in scoring, no need to show message in joker_main phase, game does it for us.
                 chips = hand_chips * ( card.ability.extra.chip_mult - 1 ), -- This is number of chips to ADD to chips, so we multiply by mult - 1
                 colour = G.C.CHIPS
@@ -31,8 +30,6 @@ SMODS.Joker{
     end,
 
 	loc_vars = function(self, info_queue, card)                              --defines variables to use in the UI. you can use #1# for example to show the chips variable
-		logger = adc_get_logger()
-		logger.log( {vars = { card.ability.extra.chip_mult, card.ability.extra.chip_mult_mod }} )
         return { vars = { card.ability.extra.chip_mult, card.ability.extra.chip_mult_mod } }
     end
 
