@@ -1,0 +1,14 @@
+{
+  "id": "Aaron",
+  "name": "Aaron",
+  "display_name": "Aaron",
+  "author": ["Aaron D. Campbell"],
+  "description": "A small mod that Aaron made.",
+  "prefix": "adc",
+  "main_file": "Aaron.lua",
+  "priority": 0,
+  "badge_colour": "5E527A",
+  "badge_text_colour": "",
+  "version": "1.0.0",
+  "dependencies": ["Steamodded (>=1.0.0~BETA-0614a)"]
+}
