@@ -5,10 +5,10 @@ return {
                 name = "Mult Chips",
                 text = {
                     "This Joker gains",
-                    "{C:chips}×#2#{} Chips if played",
+                    "{X:chips,C:white}×#2#{} Chips if played",
                     "{C:attention}poker hand{} has already",
                     "been played twice this round",
-                    "{C:inactive}(Currently {C:chips}×#1#{C:inactive} Chips)",
+                    "{C:inactive}(Currently {X:chips,C:white}×#1#{C:inactive} Chips)",
                 },
             }
         }

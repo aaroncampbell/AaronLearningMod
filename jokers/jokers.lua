@@ -21,6 +21,15 @@ SMODS.Joker{
 
     calculate = function(self, card, context)                   --define calculate functions here
         if card.debuff then return nil end               --if joker is debuffed return nil
+
+		if context.before and context.main_eval and not context.blueprint and G.GAME.hands[context.scoring_name] and G.GAME.hands[context.scoring_name].played_this_round > 2 then
+			card.ability.extra.chip_mult = card.ability.extra.chip_mult + card.ability.extra.chip_mult_mod -- Increase chip multiplier by chip_mult_mod
+            return {
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS
+            }
+        end
+
         if context.joker_main and context.cardarea == G.jokers then
             return { -- returns total chips from joker to be used in scoring, no need to show message in joker_main phase, game does it for us.
                 chips = hand_chips * ( card.ability.extra.chip_mult - 1 ), -- This is number of chips to ADD to chips, so we multiply by mult - 1
