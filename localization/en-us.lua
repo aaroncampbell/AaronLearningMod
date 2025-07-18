@@ -10,6 +10,22 @@ return {
                     "been played twice this round",
                     "{C:inactive}(Currently {X:chips,C:white}×#1#{C:inactive} Chips)",
                 },
+            },
+            j_adc_cheat = {
+                name = "Cheat",
+                text = {
+                    "This Joker gives",
+                    "{X:blue,C:white}+#1#{} Joker"
+                },
+            },
+            j_adc_roulette = {
+                name = "Roulette",
+                text = {
+                    "Bets (lose) $1 per card played.",
+                    "Earn {C:money}$#1#{} per dollar bet",
+                    "for each scored {C:attention}#2#{}.",
+                    "Spins to change rank every round"
+                },
             }
         }
     },
