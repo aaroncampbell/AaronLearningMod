@@ -99,12 +99,6 @@ SMODS.Joker{
 	pos = { x = 0, y = 0 }, -- For alternate colors use: { x = 1, y = 0 }
 	config = { extra = { current_card='2', return_on_bet='5', animated=nil } },  --variables used for abilities and effects.
 
-    add_to_deck = function(self, card, from_debuff)
-        G.hand:change_size(40)
-    end,
-    remove_from_deck = function(self, card, from_debuff)
-        G.hand:change_size(-40)
-    end,
 	calculate = function(self, card, context)
     	if card.debuff then return nil end
 		if context.before then
