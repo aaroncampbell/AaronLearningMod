@@ -1,3 +1,5 @@
+-- watch lua /Mods/Aaron/localization/en-us.lua
+-- watch lua /Mods/Aaron/jokers/jokers.lua
 Aaron = {}
 
 assert(SMODS.load_file("globals.lua"))()
