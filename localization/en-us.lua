@@ -4,8 +4,8 @@ return {
             j_adc_mult_chips = {
                 name = "Mult Chips",
                 text = {
-                    "This Joker gains",
-                    "{X:chips,C:white}×#2#{} Chips if played",
+                    "This Joker's multiplier scales",
+                    "by {X:chips,C:white}×#2#{} if played",
                     "{C:attention}poker hand{} has already",
                     "been played twice this round",
                     "{C:inactive}(Currently {X:chips,C:white}×#1#{C:inactive} Chips)",
@@ -48,6 +48,7 @@ return {
             a_sold_tally="#1#/#2# Sold",
             a_xmult="X#1# Mult",
             a_xmult_minus="-X#1# Mult",
+            adc_roulette_bet="Bet $1!",
         }
     }
 }

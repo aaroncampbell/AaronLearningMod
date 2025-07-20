@@ -15,8 +15,6 @@ SMODS.Atlas({
 SMODS.Atlas({
 	key = "roulette",
 	path = "j_roulette.png",
-	-- atlas_table = 'ANIMATION_ATLAS',
-	-- frames = 2,
 	px = 71,
 	py = 95
 })
@@ -50,7 +48,7 @@ SMODS.Joker{
 
 SMODS.Joker{
 	key = "mult_chips",                                         --name used by the joker.
-	config = { extra = { chip_mult = 2, chip_mult_mod = 1 } },  --variables used for abilities and effects.
+	config = { extra = { chip_mult = 3, chip_mult_mod = 1.5 } },--variables used for abilities and effects.
 	pos = { x = 0, y = 0 },                                     --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
 	rarity = 1,                                                 --rarity 1=common, 2=uncommen, 3=rare, 4=legendary
 	cost = 1,                                                   --cost to buy the joker in shops.
@@ -65,19 +63,9 @@ SMODS.Joker{
 
 	calculate = function(self, card, context)                   --define calculate functions here
     	if card.debuff then return nil end               --if joker is debuffed return nil
-		if context.before then
-			logger = adc_get_logger()
-			logger.log( "::SELF::" )
-			logger.log( self )
-			logger.log( "::CARD::" )
-			logger.log( card )
-			-- self.atlas = "adc_cheat"
-			-- card.children.center:reset()
-			-- card.children.center:set_sprite_pos({x = 0, y = 0}) iirc?
-		end
 
 		if context.before and context.main_eval and not context.blueprint and G.GAME.hands[context.scoring_name] and G.GAME.hands[context.scoring_name].played_this_round > 2 then
-			card.ability.extra.chip_mult = card.ability.extra.chip_mult + card.ability.extra.chip_mult_mod -- Increase chip multiplier by chip_mult_mod
+			card.ability.extra.chip_mult = card.ability.extra.chip_mult * card.ability.extra.chip_mult_mod -- Multiply chip multiplier by chip_mult_mod
         	return {
             	message = localize('k_upgrade_ex'),
             	colour = G.C.CHIPS
@@ -111,11 +99,29 @@ SMODS.Joker{
 	pos = { x = 0, y = 0 }, -- For alternate colors use: { x = 1, y = 0 }
 	config = { extra = { current_card='2', return_on_bet='5', animated=nil } },  --variables used for abilities and effects.
 
+    add_to_deck = function(self, card, from_debuff)
+        G.hand:change_size(40)
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        G.hand:change_size(-40)
+    end,
 	calculate = function(self, card, context)
     	if card.debuff then return nil end
 		if context.before then
-			logger = adc_get_logger()
-			-- logger.log( G.TIMERS )
+
+			for i = 1, #G.play.cards do
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						G.play.cards[i]:juice_up()
+						SMODS.calculate_effect({message = localize( 'adc_roulette_bet' ), instant = true}, G.play.cards[i])
+						return true
+					end,
+				}))
+				ease_dollars(-1)
+				delay(0.23)
+			end
+
+			-- Animate card
 			card.ability.extra.animated = true
 
 			-- Build a table of all ranks existing in the deck
@@ -128,32 +134,38 @@ SMODS.Joker{
 
 			-- Choose a random rank from the ones existing in the current deck
 			local chosen_card = pseudorandom_element(valid_card_ranks, pseudoseed('adc_roulette'))
-			card.ability.extra.current_card = chosen_card.base.value
+			card.ability.extra.current_card = chosen_card.base
 
 			G.E_MANAGER:add_event(Event({
 				trigger = "after",
-				delay = 5,
+				delay = 2,
 				func = function()
 					card.ability.extra.animated = false
-					-- card_eval_status_text(card, 'extra', nil, nil, nil, nil)
-					-- card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('adc_card_rank')})
+					SMODS.calculate_effect({message = card.ability.extra.current_card.value .. "!", instant = true}, card)
 					return true
 				end,
 			}))
 		end
+		card.ability.extra.dollars = 0
+		if context.individual and context.cardarea == G.play and context.other_card:get_id() == card.ability.extra.current_card.id then
+			card.ability.extra.dollars = #context.full_hand * card.ability.extra.return_on_bet
+			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.dollars
+			return {
+				dollars = card.ability.extra.dollars
+			}
+		end
+
 	end,
 
 	update = function(self, card, context)
-		logger = adc_get_logger()
 		if not card.ability.extra.animated then return end
 		local timer = (G.TIMERS.REAL * 10)
 		local frame = math.floor(timer) % 2
-		-- logger.log( frame );
 		card.children.center:set_sprite_pos({x = frame, y = 0})
 	end,
 
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.return_on_bet, card.ability.extra.current_card } }
+        return { vars = { card.ability.extra.return_on_bet, card.ability.extra.current_card.value } }
 	end
 
 }
