@@ -26,6 +26,16 @@ return {
                     "for each scored {C:attention}#2#{}.",
                     "Spins to change rank every round"
                 },
+            },
+        },
+        Back = {
+            b_adc_PowerKings = {
+                name = "PowerKings",
+                text = {
+                    "Deck of all kings of hearts",
+                    "All cards are eternal, steel,",
+                    "polychrome, with red seal"
+                }
             }
         }
     },

@@ -19,6 +19,13 @@ SMODS.Atlas({
 	py = 95
 })
 
+SMODS.Atlas({
+	key = "gashapon",
+	path = "j_gashapon.png",
+	px = 71,
+	py = 95
+})
+
 SMODS.Joker{
 	key = "cheat",                                   --name used by the joker.
 	config = { extra = { bonus_joker_slots = 2 } },  --variables used for abilities and effects.
