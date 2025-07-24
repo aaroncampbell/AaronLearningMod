@@ -27,6 +27,18 @@ return {
                     "Spins to change rank every round"
                 },
             },
+            j_adc_gashapon = {
+                name = "Gashapon",
+                text = {
+                    "{C:green}#1# in #2#{} chance for negative",
+                    "{C:green}#1# in #3#{} chance for polychrome",
+                    "{C:green}#1# in #4#{} chance for holo",
+                    "{C:green}#1# in #5#{} chance for foil",
+                    "{C:green}#1# in #6#{} chance for packs",
+                    "{C:green}#1# in #7#{} chance for grandprize",
+                    "{C:green}#1# in #8#{} chance for secondprize",
+                },
+            },
         },
         Back = {
             b_adc_PowerKings = {

@@ -1,6 +1,6 @@
 SMODS.Atlas({
-	key = "PowerKings",
-	path = "b_steel_redseal_etenal_king_hearts.png",
+	key = "backs",
+	path = "backs.png",
 	px = 71,
 	py = 95
 })
@@ -8,7 +8,7 @@ SMODS.Atlas({
 -- Power Kings Deck
 SMODS.Back {
     key = "PowerKings",
-    atlas = "PowerKings",
+    atlas = "backs",
     name = "PowerKings",
     pos = { x = 0, y = 0 },
     unlocked = true,

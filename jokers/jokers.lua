@@ -1,27 +1,6 @@
 SMODS.Atlas({
-	key = "cheat",
-	path = "j_cheat.png",
-	px = 71,
-	py = 95
-})
-
-SMODS.Atlas({
-	key = "mult_chips",
-	path = "j_mult_chips.png",
-	px = 71,
-	py = 95
-})
-
-SMODS.Atlas({
-	key = "roulette",
-	path = "j_roulette.png",
-	px = 71,
-	py = 95
-})
-
-SMODS.Atlas({
-	key = "gashapon",
-	path = "j_gashapon.png",
+	key = "jokers",
+	path = "jokers.png",
 	px = 71,
 	py = 95
 })
@@ -29,7 +8,7 @@ SMODS.Atlas({
 SMODS.Joker{
 	key = "cheat",                                   --name used by the joker.
 	config = { extra = { bonus_joker_slots = 2 } },  --variables used for abilities and effects.
-	pos = { x = 0, y = 0 },                          --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
+	pos = { x = 0, y = 1 },                          --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
 	rarity = 1,                                      --rarity 1=common, 2=uncommen, 3=rare, 4=legendary
 	cost = 1,                                        --cost to buy the joker in shops.
 	blueprint_compat=false,                          --does joker work with blueprint.
@@ -38,7 +17,7 @@ SMODS.Joker{
 	discovered = true,                               --is joker discovered by default.
 	-- effect=nil,                                      --you can specify an effect here eg. 'Mult'
 	-- soul_pos=nil,                                    --pos of a soul sprite.
-	atlas = 'cheat',                                 -- atlas name, single sprites are deprecated.
+	atlas = 'jokers',                                 -- atlas name, single sprites are deprecated.
 
 	add_to_deck = function(self, card, from_debuff)
 		G.jokers.config.card_limit = G.jokers.config.card_limit + card.ability.extra.bonus_joker_slots
@@ -56,7 +35,7 @@ SMODS.Joker{
 SMODS.Joker{
 	key = "mult_chips",                                         --name used by the joker.
 	config = { extra = { chip_mult = 3, chip_mult_mod = 1.5 } },--variables used for abilities and effects.
-	pos = { x = 0, y = 0 },                                     --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
+	pos = { x = 1, y = 1 },                                     --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
 	rarity = 1,                                                 --rarity 1=common, 2=uncommen, 3=rare, 4=legendary
 	cost = 1,                                                   --cost to buy the joker in shops.
 	blueprint_compat=true,                                      --does joker work with blueprint.
@@ -65,7 +44,7 @@ SMODS.Joker{
 	discovered = true,                                          --is joker discovered by default.
 	-- effect=nil,                                                 --you can specify an effect here eg. 'Mult'
 	-- soul_pos=nil,                                               --pos of a soul sprite.
-	atlas = 'mult_chips',                                       -- atlas name, single sprites are deprecated.
+	atlas = 'jokers',                                       -- atlas name, single sprites are deprecated.
 
 
 	calculate = function(self, card, context)                   --define calculate functions here
@@ -101,7 +80,7 @@ SMODS.Joker{
 	unlocked = true,
 	discovered = true,
 	rarity = 1,
-	atlas = 'roulette',
+	atlas = 'jokers',
 	cost = 1,
 	pos = { x = 0, y = 0 }, -- For alternate colors use: { x = 1, y = 0 }
 	config = { extra = { current_card='2', return_on_bet='5', animated=nil } },  --variables used for abilities and effects.
@@ -169,4 +148,85 @@ SMODS.Joker{
         return { vars = { card.ability.extra.return_on_bet, card.ability.extra.current_card.value } }
 	end
 
+}
+
+SMODS.Joker{
+	key = "gashapon",                                --name used by the joker.
+	config = { extra = {
+		odds = {
+			negative = 100,
+			polychrome = 50,
+			holo = 10,
+			foil = 5,
+			packs = 10,
+			grandprize = 10000,
+			secondprize = 5000
+		}
+	} },
+	pos = { x = 2, y = 1 },                          --pos in spritesheet 0,0 for single sprites or the first sprite in the spritesheet.
+	rarity = 1,                                      --rarity 1=common, 2=uncommen, 3=rare, 4=legendary
+	cost = 1,                                        --cost to buy the joker in shops.
+	blueprint_compat=true,                           --does joker work with blueprint.
+	eternal_compat=true,                             --can joker be eternal.
+	unlocked = true,                                 --is joker unlocked by default.
+	discovered = true,                               --is joker discovered by default.
+	atlas = 'jokers',                              -- atlas name, single sprites are deprecated.
+    loc_vars = function(self, info_queue, card)
+        return { vars = {
+			G.GAME.probabilities.normal or 1,
+			card.ability.extra.odds.negative,
+			card.ability.extra.odds.polychrome,
+			card.ability.extra.odds.holo,
+			card.ability.extra.odds.foil,
+			card.ability.extra.odds.packs,
+			card.ability.extra.odds.grandprize,
+			card.ability.extra.odds.secondprize
+		} }
+    end,
+    calculate = function(self, card, context)
+		local logger = adc_get_logger()
+
+		if context.end_of_round and context.main_eval then -- main_eval avoids firing extra times for individual, repitition, etc
+		-- if context.starting_shop then
+
+			local tag = Tag(tag_key)
+			add_tag(tag)
+
+
+			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
+			-- G.FUNCS.use_card({ config = { ref_table = booster } })
+
+			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
+			-- G.FUNCS.use_card({ config = { ref_table = booster } })
+
+			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
+			-- G.FUNCS.use_card({ config = { ref_table = booster } })
+
+			-- local voucher = SMODS.add_card( { set = 'Voucher', area = G.play })
+			-- voucher:redeem()
+			-- delay( 1.5 )
+			-- voucher:start_dissolve()
+
+		end
+    end,
+	--     if _guaranteed then
+    --     if edition_poll > 1 - 0.003*25 and not _no_neg then
+    --         return {negative = true}
+    --     elseif edition_poll > 1 - 0.006*25 then
+    --         return {polychrome = true}
+    --     elseif edition_poll > 1 - 0.02*25 then
+    --         return {holo = true}
+    --     elseif edition_poll > 1 - 0.04*25 then
+    --         return {foil = true}
+    --     end
+    -- else
+
+	-- 	function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
+
+	-- add_to_deck = function(self, card, from_debuff)
+	-- 	G.jokers.config.card_limit = G.jokers.config.card_limit + card.ability.extra.bonus_joker_slots
+	-- end,
+	-- remove_from_deck = function(self, card, from_debuff)
+	-- 	G.jokers.config.card_limit = G.jokers.config.card_limit - card.ability.extra.bonus_joker_slots
+	-- end,
 }
