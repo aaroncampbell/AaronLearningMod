@@ -15,8 +15,6 @@ SMODS.Joker{
 	eternal_compat=true,                             --can joker be eternal.
 	unlocked = true,                                 --is joker unlocked by default.
 	discovered = true,                               --is joker discovered by default.
-	-- effect=nil,                                      --you can specify an effect here eg. 'Mult'
-	-- soul_pos=nil,                                    --pos of a soul sprite.
 	atlas = 'jokers',                                 -- atlas name, single sprites are deprecated.
 
 	add_to_deck = function(self, card, from_debuff)
@@ -42,8 +40,6 @@ SMODS.Joker{
 	eternal_compat=true,                                        --can joker be eternal.
 	unlocked = true,                                            --is joker unlocked by default.
 	discovered = true,                                          --is joker discovered by default.
-	-- effect=nil,                                                 --you can specify an effect here eg. 'Mult'
-	-- soul_pos=nil,                                               --pos of a soul sprite.
 	atlas = 'jokers',                                       -- atlas name, single sprites are deprecated.
 
 
@@ -71,7 +67,6 @@ SMODS.Joker{
 	end
 
 }
--- eval G.jokers.cards[1].children.center:set_sprite_pos({x = 1, y=0})
 
 SMODS.Joker{
 	key = "roulette",

@@ -6,12 +6,11 @@ SMODS.Atlas({
 })
 
 
--- Negative Tag
+-- Gashapon Tag
 SMODS.Tag {
 	key = "gashapon",
 	atlas = 'tags',
 	min_ante = 999,
-	-- unlocked = true,
 	discovered = true,
 	pos = { x = 0, y = 0 },
 	config = { extra = {
