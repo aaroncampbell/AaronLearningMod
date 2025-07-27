@@ -1,4 +1,5 @@
 G.C.ADC = {
+    PLUM = HEX("5E527A"),
     RED = HEX("FF0000"),
     BLACK = HEX("000000"),
     BLUE = HEX("0000FF"),
@@ -12,6 +13,7 @@ function loc_colour(_c, _default)
     if not G.ARGS.LOC_COLOURS then
         loc_colour_ref()
     end
+    G.ARGS.LOC_COLOURS.adc_plum = G.C.ADC.PLUM
     G.ARGS.LOC_COLOURS.adc_red = G.C.ADC.RED
     G.ARGS.LOC_COLOURS.adc_black = G.C.ADC.BLACK
     G.ARGS.LOC_COLOURS.adc_blue = G.C.ADC.BLUE

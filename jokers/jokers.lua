@@ -189,23 +189,11 @@ SMODS.Joker{
 		if context.end_of_round and context.main_eval then -- main_eval avoids firing extra times for individual, repitition, etc
 		-- if context.starting_shop then
 
-			local tag = Tag(tag_key)
-			add_tag(tag)
-
-
-			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
-			-- G.FUNCS.use_card({ config = { ref_table = booster } })
-
-			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
-			-- G.FUNCS.use_card({ config = { ref_table = booster } })
-
-			-- local booster = SMODS.add_card( { set = 'Booster', area = G.play })
-			-- G.FUNCS.use_card({ config = { ref_table = booster } })
-
-			-- local voucher = SMODS.add_card( { set = 'Voucher', area = G.play })
-			-- voucher:redeem()
-			-- delay( 1.5 )
-			-- voucher:start_dissolve()
+			-- Add a gashapon tag
+			local gashaponTag = Tag( 'tag_adc_gashapon' )
+			gashaponTag.config.odds = card.ability.extra.odds
+			add_tag( gashaponTag )
+			-- eval add_tag( Tag( 'tag_adc_gashapon' ) )
 
 		end
     end,
