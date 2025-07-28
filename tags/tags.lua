@@ -25,26 +25,61 @@ SMODS.Tag {
 			secondprize = 5000
 		}
 	} },
+	set_lock = function ( self, lock )
+		-- Store all locks in a parent 'gashapon-tag' so we can check for "any pending gashapon" while maintaining individual locks
+		if ( not G.CONTROLLER.locks['gashapon-tag'] ) then
+			G.CONTROLLER.locks['gashapon-tag'] = {}
+		end
+		G.CONTROLLER.locks['gashapon-tag'][lock] = true
+	end,
+	clear_lock = function ( self, lock )
+		-- Clear individual lock
+		G.CONTROLLER.locks['gashapon-tag'][lock] = nil
+		-- If no gashapon tag locks exist
+		if ( next( G.CONTROLLER.locks['gashapon-tag'] ) == nil ) then
+			-- Clear parent lock completely
+			G.CONTROLLER.locks['gashapon-tag'] = nil
+			-- If there is still a pending gashapon tag, then process again using a custom context so we don't accidentally trigger something else
+			if ( next( self.find_tag( 'tag_adc_gashapon' ) ) ) then
+				local i, _ = next( G.GAME.tags )
+				G.GAME.tags[i]:apply_to_run({type = 'gashapon_tag'})
+			end
+		end
+	end,
+	find_tag = function ( name )
+		local tags = {}
+		if not G.GAME.tags then return {} end
+		for k, v in pairs( G.GAME.tags ) do
+			if v and type(v) == 'table' and v.key == name then
+			table.insert(tags, v)
+			end
+		end
+		return tags
+	end,
 	in_pool = function()
 		return (next( find_joker( "j_adc_gashapon" ) ))
 	end,
 	loc_vars = function(self, info_queue, tag)
 	end,
 	apply = function(self, tag, context)
-		if context.type == 'shop_start' and G.STATE ~= G.STATES.SMODS_BOOSTER_OPENED then
+		if ( context.type == 'shop_start' or context.type == 'gashapon_tag' ) and not G.CONTROLLER.locks['gashapon-tag'] then
 			local lock = tag.ID
-			G.CONTROLLER.locks[lock] = true
+			self:set_lock( lock )
+
 			tag:yep('+', G.C.ADC.PLUM, function()
-				local booster = SMODS.add_card( { set = 'Booster', area = G.play })
-				booster.T.x = G.play.T.x + G.play.T.w / 2 - G.CARD_W * 1.27 / 2
-				booster.T.y = G.play.T.y + G.play.T.h / 2 - G.CARD_H * 1.27 / 2
-				booster.T.w = G.CARD_W * 1.27
-				booster.T.h = G.CARD_H * 1.27
-				booster.cost = 0
-				booster.from_tag = true
-				G.FUNCS.use_card({ config = { ref_table = booster } })
-				booster:start_materialize()
-				G.CONTROLLER.locks[lock] = nil
+				local voucher = SMODS.add_card( { set = 'Voucher', area = G.play })
+				voucher.cost = 0
+				voucher:redeem()
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0,
+					func = function()
+						voucher:start_dissolve()
+						self:clear_lock( lock )
+						return true
+					end,
+				}))
+
 				return true
 			end)
 			tag.triggered = true
