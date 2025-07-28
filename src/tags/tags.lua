@@ -20,41 +20,29 @@ SMODS.Tag {
 			polychrome = 50,
 			holo = 10,
 			foil = 5,
-			packs = 10,
 			grandprize = 10000,
 			secondprize = 5000
 		}
 	} },
 	set_lock = function ( self, lock )
-		-- Store all locks in a parent 'gashapon-tag' so we can check for "any pending gashapon" while maintaining individual locks
-		if ( not G.CONTROLLER.locks['gashapon-tag'] ) then
-			G.CONTROLLER.locks['gashapon-tag'] = {}
-		end
-		G.CONTROLLER.locks['gashapon-tag'][lock] = true
+
+		G.ADC.processing_gashapon_tag = self -- This is a broader lock that is used to prevent tags processing in parallel
+		G.CONTROLLER.locks[lock] = true
 	end,
-	clear_lock = function ( self, lock )
-		-- Clear individual lock
-		G.CONTROLLER.locks['gashapon-tag'][lock] = nil
-		-- If no gashapon tag locks exist
-		if ( next( G.CONTROLLER.locks['gashapon-tag'] ) == nil ) then
-			-- Clear parent lock completely
-			G.CONTROLLER.locks['gashapon-tag'] = nil
+	clear_lock = function ( self, lock, trigger_next )
+		if ( lock ) then
+			-- Clear individual lock
+			G.CONTROLLER.locks[lock] = nil
+		end
+		-- If we want to trigger more
+		if ( trigger_next ) then
+			G.ADC.processing_gashapon_tag = nil
 			-- If there is still a pending gashapon tag, then process again using a custom context so we don't accidentally trigger something else
-			if ( next( self.find_tag( 'tag_adc_gashapon' ) ) ) then
+			if ( next( Aaron.find_tag( 'tag_adc_gashapon' ) ) ) then
 				local i, _ = next( G.GAME.tags )
 				G.GAME.tags[i]:apply_to_run({type = 'gashapon_tag'})
 			end
 		end
-	end,
-	find_tag = function ( name )
-		local tags = {}
-		if not G.GAME.tags then return {} end
-		for k, v in pairs( G.GAME.tags ) do
-			if v and type(v) == 'table' and v.key == name then
-			table.insert(tags, v)
-			end
-		end
-		return tags
 	end,
 	in_pool = function()
 		return (next( find_joker( "j_adc_gashapon" ) ))
@@ -62,11 +50,23 @@ SMODS.Tag {
 	loc_vars = function(self, info_queue, tag)
 	end,
 	apply = function(self, tag, context)
-		if ( context.type == 'shop_start' or context.type == 'gashapon_tag' ) and not G.CONTROLLER.locks['gashapon-tag'] then
+		local logger = adc_get_logger()
+		if ( context.type == 'shop_start' or context.type == 'gashapon_tag' ) and not G.ADC.processing_gashapon_tag then
+
 			local lock = tag.ID
 			self:set_lock( lock )
 
 			tag:yep('+', G.C.ADC.PLUM, function()
+
+				local odds = {}
+				odds.negative = pseudorandom( 'adc_negative' ) < G.GAME.probabilities.normal / tag.config.extra.odds.negative
+				odds.polychrome = pseudorandom( 'adc_polychrome' ) < G.GAME.probabilities.normal / tag.config.extra.odds.polychrome
+				odds.holo = pseudorandom( 'adc_holo' ) < G.GAME.probabilities.normal / tag.config.extra.odds.holo
+				odds.foil = pseudorandom( 'adc_foil' ) < G.GAME.probabilities.normal / tag.config.extra.odds.foil
+				odds.grandprize = pseudorandom( 'adc_grandprize' ) < G.GAME.probabilities.normal / tag.config.extra.odds.grandprize
+				odds.secondprize = pseudorandom( 'adc_secondprize' ) < G.GAME.probabilities.normal / tag.config.extra.odds.secondprize
+				-- logger.log( odds )
+
 				local voucher = SMODS.add_card( { set = 'Voucher', area = G.play })
 				voucher.cost = 0
 				voucher:redeem()
@@ -75,7 +75,7 @@ SMODS.Tag {
 					delay = 0,
 					func = function()
 						voucher:start_dissolve()
-						self:clear_lock( lock )
+						self:clear_lock( lock, true )
 						return true
 					end,
 				}))

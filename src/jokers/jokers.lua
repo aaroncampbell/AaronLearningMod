@@ -153,7 +153,6 @@ SMODS.Joker{
 			polychrome = 50,
 			holo = 10,
 			foil = 5,
-			packs = 10,
 			grandprize = 10000,
 			secondprize = 5000
 		}
@@ -173,7 +172,6 @@ SMODS.Joker{
 			card.ability.extra.odds.polychrome,
 			card.ability.extra.odds.holo,
 			card.ability.extra.odds.foil,
-			card.ability.extra.odds.packs,
 			card.ability.extra.odds.grandprize,
 			card.ability.extra.odds.secondprize
 		} }
