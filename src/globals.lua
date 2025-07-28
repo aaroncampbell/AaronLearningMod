@@ -8,6 +8,8 @@ G.C.ADC = {
     TRANSPARENT = HEX("00000000"),
 }
 
+G.ADC = {}
+
 local loc_colour_ref = loc_colour
 function loc_colour(_c, _default)
     if not G.ARGS.LOC_COLOURS then
